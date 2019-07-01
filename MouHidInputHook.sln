@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MouHidInputHook", "MouHidInputHook\MouHidInputHook.vcxproj", "{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MouHidMonitor", "MouHidMonitor\MouHidMonitor.vcxproj", "{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x64.ActiveCfg = Debug|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x64.Build.0 = Debug|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x64.Deploy.0 = Debug|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x86.ActiveCfg = Debug|Win32
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x86.Build.0 = Debug|Win32
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Debug|x86.Deploy.0 = Debug|Win32
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x64.ActiveCfg = Release|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x64.Build.0 = Release|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x64.Deploy.0 = Release|x64
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x86.ActiveCfg = Release|Win32
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x86.Build.0 = Release|Win32
+		{B1633E0D-8DBF-4913-AAF7-8E3FB891FDC9}.Release|x86.Deploy.0 = Release|Win32
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Debug|x64.ActiveCfg = Debug|x64
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Debug|x64.Build.0 = Debug|x64
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Debug|x86.ActiveCfg = Debug|Win32
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Debug|x86.Build.0 = Debug|Win32
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Release|x64.ActiveCfg = Release|x64
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Release|x64.Build.0 = Release|x64
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Release|x86.ActiveCfg = Release|Win32
+		{84AFD7F5-416B-455C-81ED-1C7E5B11CDB6}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3BEAACE-9A8E-475A-9E2C-2C7B61293F9D}
+	EndGlobalSection
+EndGlobal
