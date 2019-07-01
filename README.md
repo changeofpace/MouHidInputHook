@@ -124,7 +124,7 @@ This module registers a PnP notification callback for mouse device interface cha
 
 https://github.com/changeofpace/MouClassInputInjection
 
-MouClassInputInjection defines a user/kernel interface for injecting mouse input data packets into the input data stream of HID USB mouse devices. This project uses the **MouHid Hook Manager** to resolve the connect data objects for HID USB mouse device stacks.
+MouClassInputInjection implements a kernel interface for injecting mouse input data packets into the input data stream of HID USB mouse devices. This project uses the **MouHid Hook Manager** to resolve the connect data objects for HID USB mouse device stacks.
 
 ## Notes
 
