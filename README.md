@@ -93,8 +93,8 @@ The following diagram depicts the input processing system for a HID USB mouse de
     PCONNECT_DATA ConnectData = &DeviceExtension->ConnectData;
     ULONG InputDataConsumed = 0;
 
-    ((MOUSE_SERVICE_CALLBACK_ROUTINE)ConnectData.ClassService)(
-        ConnectData.ClassDeviceObject,
+    ((MOUSE_SERVICE_CALLBACK_ROUTINE)ConnectData->ClassService)(
+        ConnectData->ClassDeviceObject,
         DeviceExtension->InputDataStart,
         DeviceExtension->InputDataEnd,
         &InputDataConsumed);
@@ -106,7 +106,7 @@ The following diagram depicts the input processing system for a HID USB mouse de
 
 ## Interface
 
-The MouHid Hook Manager module defines an interface for registering an **MHK hook callback** and an optional **MHK notification callback**.
+The [MouHid Hook Manager](./MouHidInputHook/mouhid_hook_manager.h) module defines an interface for registering an **MHK hook callback** and an optional **MHK notification callback**.
 
 The **MHK hook callback** is invoked each time the MouHid driver invokes a mouse class service callback to copy mouse input data packets from a hooked MouHid device object to the class data queue of a mouse class device object. Callers can filter and modify these input packets or inject synthesized packets like in a standard mouse filter driver.
 
@@ -114,9 +114,34 @@ The **MHK notification callback** is invoked when a mouse related PNP event inva
 
 ## Implementation
 
-The MouHid Hook Manager module hooks the **ClassService** field of the **CONNECT_DATA** object inside the device extension of each MouHid device object. This 'hook point' is marked in the 'Mouse Input Processing' image above. These hooks are installed when a caller registers an MHK hook callback, and they are uninstalled when that caller unregisters their callback.
+### MouHid Hook Manager
+
+The [MouHid Hook Manager](./MouHidInputHook/mouhid_hook_manager.cpp) module hooks the **ClassService** field of the **CONNECT_DATA** object inside the device extension of each MouHid device object. This 'hook point' is marked in the 'Mouse Input Processing' image above. These hooks are installed when a caller registers an MHK hook callback, and they are uninstalled when that caller unregisters their callback.
 
 This module registers a PnP notification callback for mouse device interface changes. If a mouse device interface event occurs while an MHK hook callback is registered then that callback is unregistered and its corresponding MHK notification callback is invoked.
+
+### Connect Data Heuristic
+
+The [MouHid](./MouHidInputHook/mouhid.cpp) module uses a heuristic to dynamically resolve the **CONNECT_DATA** field inside the MouHid device extension. This heuristic is based on the MouClass initialiation protocol so it may be applicable to other mouse device types. i.e., This heuristic can potentially be used for any mouse device stack which uses the MouClass driver. The following is a summary of the heuristic:
+
+1. Obtain a list of all the MouHid device objects.
+
+2. For each MouHid device object:
+
+    1. Get the device object attached to the MouHid device object.
+
+    2. Get the address range of every executable image section in the driver of
+        the attached device object.
+
+    3. Search the device extension of the MouHid device object for a valid
+        CONNECT_DATA object by interpreting each pointer-aligned address as a
+        CONNECT_DATA candidate. A candidate is valid if it meets the following
+        criteria:
+
+        1. The **ClassDeviceObject** field matches the attached device object.
+
+        2. The **ClassService** field points to an address contained in one of
+            the executable image sections from (ii).
 
 ## Related Projects
 
