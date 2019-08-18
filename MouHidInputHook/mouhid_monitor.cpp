@@ -88,18 +88,18 @@ Remarks:
     BOOLEAN fResourceInitialized = FALSE;
     NTSTATUS ntstatus = STATUS_SUCCESS;
 
-    DBG_PRINT("Loading %s.\n", MODULE_TITLE);
+    DBG_PRINT("Loading %s.", MODULE_TITLE);
 
     ntstatus = ExInitializeResourceLite(&g_MhmContext.Resource);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("ExInitializeResourceLite failed: 0x%X\n", ntstatus);
+        ERR_PRINT("ExInitializeResourceLite failed: 0x%X", ntstatus);
         goto exit;
     }
     //
     fResourceInitialized = TRUE;
 
-    DBG_PRINT("%s loaded.\n", MODULE_TITLE);
+    DBG_PRINT("%s loaded.", MODULE_TITLE);
 
 exit:
     if (!NT_SUCCESS(ntstatus))
@@ -119,13 +119,13 @@ EXTERN_C
 VOID
 MhmDriverUnload()
 {
-    DBG_PRINT("Unloading %s.\n", MODULE_TITLE);
+    DBG_PRINT("Unloading %s.", MODULE_TITLE);
 
     VERIFY(MhmDisableMouHidMonitor());
 
     VERIFY(ExDeleteResourceLite(&g_MhmContext.Resource));
 
-    DBG_PRINT("%s unloaded.\n", MODULE_TITLE);
+    DBG_PRINT("%s unloaded.", MODULE_TITLE);
 }
 
 
@@ -184,13 +184,13 @@ Remarks:
     HANDLE RegistrationHandle = NULL;
     NTSTATUS ntstatus = STATUS_SUCCESS;
 
-    DBG_PRINT("Enabling %s.\n", MODULE_TITLE);
+    DBG_PRINT("Enabling %s.", MODULE_TITLE);
 
     ExEnterCriticalRegionAndAcquireResourceExclusive(&g_MhmContext.Resource);
 
     if (g_MhmContext.RegistrationHandle)
     {
-        ERR_PRINT("%s is already enabled.\n", MODULE_TITLE);
+        ERR_PRINT("%s is already enabled.", MODULE_TITLE);
         ntstatus = STATUS_ALREADY_REGISTERED;
         goto exit;
     }
@@ -213,11 +213,11 @@ Remarks:
         &RegistrationHandle);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MhkRegisterCallbacks failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MhkRegisterCallbacks failed: 0x%X", ntstatus);
         goto exit;
     }
 
-    DBG_PRINT("%s enabled.\n", MODULE_TITLE);
+    DBG_PRINT("%s enabled.", MODULE_TITLE);
 
     //
     // Update the global context.
@@ -248,21 +248,21 @@ MhmDisableMouHidMonitor()
     HANDLE RegistrationHandle = NULL;
     NTSTATUS ntstatus = STATUS_SUCCESS;
 
-    DBG_PRINT("Disabling %s.\n", MODULE_TITLE);
+    DBG_PRINT("Disabling %s.", MODULE_TITLE);
 
     ExEnterCriticalRegionAndAcquireResourceExclusive(&g_MhmContext.Resource);
 
     RegistrationHandle = g_MhmContext.RegistrationHandle;
     if (!RegistrationHandle)
     {
-        WRN_PRINT("%s is not enabled.\n", MODULE_TITLE);
+        WRN_PRINT("%s is not enabled.", MODULE_TITLE);
         goto exit;
     }
 
     ntstatus = MhkUnregisterCallbacks(RegistrationHandle);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MhkUnregisterCallbacks failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MhkUnregisterCallbacks failed: 0x%X", ntstatus);
         goto exit;
     }
 
@@ -274,7 +274,7 @@ MhmDisableMouHidMonitor()
     g_MhmContext.RegistrationHandle = NULL;
     g_MhmContext.CallbackContext = NULL;
 
-    DBG_PRINT("%s disabled.\n", MODULE_TITLE);
+    DBG_PRINT("%s disabled.", MODULE_TITLE);
 
 exit:
     ExReleaseResourceAndLeaveCriticalRegion(&g_MhmContext.Resource);
@@ -349,15 +349,15 @@ MhmpNotificationCallback(
 #if defined(DBG)
     if (MousePnpNotificationEventArrival == Event)
     {
-        DBG_PRINT("Received MHK notification. (Arrival)\n");
+        DBG_PRINT("Received MHK notification. (Arrival)");
     }
     else if (MousePnpNotificationEventRemoval == Event)
     {
-        DBG_PRINT("Received MHK notification. (Removal)\n");
+        DBG_PRINT("Received MHK notification. (Removal)");
     }
     else
     {
-        ERR_PRINT("Received MHK notification. (Unknown)\n");
+        ERR_PRINT("Received MHK notification. (Unknown)");
         DEBUG_BREAK;
     }
 #else
@@ -368,7 +368,7 @@ MhmpNotificationCallback(
 
     if (g_MhmContext.RegistrationHandle != RegistrationHandle)
     {
-        ERR_PRINT("Unexpected registration handle: %p\n", RegistrationHandle);
+        ERR_PRINT("Unexpected registration handle: %p", RegistrationHandle);
         DEBUG_BREAK;
         goto exit;
     }
@@ -383,7 +383,7 @@ MhmpNotificationCallback(
     g_MhmContext.RegistrationHandle = NULL;
     g_MhmContext.CallbackContext = NULL;
 
-    DBG_PRINT("%s disabled.\n", MODULE_TITLE);
+    DBG_PRINT("%s disabled.", MODULE_TITLE);
 
 exit:
     ExReleaseResourceAndLeaveCriticalRegion(&g_MhmContext.Resource);

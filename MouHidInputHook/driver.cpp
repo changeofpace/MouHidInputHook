@@ -71,7 +71,7 @@ DriverEntry(
 
     UNREFERENCED_PARAMETER(pRegistryPath);
 
-    DBG_PRINT("Loading %ls.\n", NT_DEVICE_NAME_U);
+    DBG_PRINT("Loading %ls.", NT_DEVICE_NAME_U);
 
     usDeviceName = RTL_CONSTANT_STRING(NT_DEVICE_NAME_U);
 
@@ -85,7 +85,7 @@ DriverEntry(
         &pDeviceObject);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("IoCreateDevice failed: 0x%X\n", ntstatus);
+        ERR_PRINT("IoCreateDevice failed: 0x%X", ntstatus);
         goto exit;
     }
     //
@@ -103,7 +103,7 @@ DriverEntry(
     ntstatus = IoCreateSymbolicLink(&usSymbolicLinkName, &usDeviceName);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("IoCreateSymbolicLink failed: 0x%X\n", ntstatus);
+        ERR_PRINT("IoCreateSymbolicLink failed: 0x%X", ntstatus);
         goto exit;
     }
     //
@@ -115,14 +115,14 @@ DriverEntry(
     ntstatus = MhdDriverEntry();
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MhdDriverEntry failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MhdDriverEntry failed: 0x%X", ntstatus);
         goto exit;
     }
 
     ntstatus = MclDriverEntry(pDriverObject);
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MclDriverEntry failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MclDriverEntry failed: 0x%X", ntstatus);
         goto exit;
     }
     //
@@ -131,7 +131,7 @@ DriverEntry(
     ntstatus = MhkDriverEntry();
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MhkDriverEntry failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MhkDriverEntry failed: 0x%X", ntstatus);
         goto exit;
     }
     //
@@ -140,13 +140,13 @@ DriverEntry(
     ntstatus = MhmDriverEntry();
     if (!NT_SUCCESS(ntstatus))
     {
-        ERR_PRINT("MhmDriverEntry failed: 0x%X\n", ntstatus);
+        ERR_PRINT("MhmDriverEntry failed: 0x%X", ntstatus);
         goto exit;
     }
     //
     fMhmLoaded = TRUE;
 
-    DBG_PRINT("%ls loaded.\n", NT_DEVICE_NAME_U);
+    DBG_PRINT("%ls loaded.", NT_DEVICE_NAME_U);
 
 exit:
     if (!NT_SUCCESS(ntstatus))
@@ -191,7 +191,7 @@ DriverUnload(
 {
     UNICODE_STRING usSymbolicLinkName = {};
 
-    DBG_PRINT("Unloading %ls.\n", NT_DEVICE_NAME_U);
+    DBG_PRINT("Unloading %ls.", NT_DEVICE_NAME_U);
 
     //
     // Unload the driver modules.
@@ -212,7 +212,7 @@ DriverUnload(
         IoDeleteDevice(pDriverObject->DeviceObject);
     }
 
-    DBG_PRINT("%ls unloaded.\n", NT_DEVICE_NAME_U);
+    DBG_PRINT("%ls unloaded.", NT_DEVICE_NAME_U);
 }
 
 
@@ -229,7 +229,7 @@ DispatchCreate(
 )
 {
     UNREFERENCED_PARAMETER(pDeviceObject);
-    DBG_PRINT("Processing IRP_MJ_CREATE.\n");
+    DBG_PRINT("Processing IRP_MJ_CREATE.");
     IoCompleteRequest(pIrp, IO_NO_INCREMENT);
     return STATUS_SUCCESS;
 }
@@ -248,7 +248,7 @@ DispatchClose(
 
     UNREFERENCED_PARAMETER(pDeviceObject);
 
-    DBG_PRINT("Processing IRP_MJ_CLOSE.\n");
+    DBG_PRINT("Processing IRP_MJ_CLOSE.");
 
     //
     // Manually disable the MouHid Monitor in case the user mode client failed
@@ -284,7 +284,7 @@ DispatchDeviceControl(
     switch (pIrpStack->Parameters.DeviceIoControl.IoControlCode)
     {
         case IOCTL_QUERY_MOUHID_INPUT_MONITOR:
-            DBG_PRINT("Processing IOCTL_QUERY_MOUHID_INPUT_MONITOR.\n");
+            DBG_PRINT("Processing IOCTL_QUERY_MOUHID_INPUT_MONITOR.");
 
             if (cbInput)
             {
@@ -310,7 +310,7 @@ DispatchDeviceControl(
                 &pQueryMouHidInputMonitorReply->Enabled);
             if (!NT_SUCCESS(ntstatus))
             {
-                ERR_PRINT("MhmQueryMouHidMonitor failed: 0x%X\n", ntstatus);
+                ERR_PRINT("MhmQueryMouHidMonitor failed: 0x%X", ntstatus);
                 goto exit;
             }
 
@@ -319,7 +319,7 @@ DispatchDeviceControl(
             break;
 
         case IOCTL_ENABLE_MOUHID_INPUT_MONITOR:
-            DBG_PRINT("Processing IOCTL_ENABLE_MOUHID_INPUT_MONITOR.\n");
+            DBG_PRINT("Processing IOCTL_ENABLE_MOUHID_INPUT_MONITOR.");
 
             if (cbInput || cbOutput)
             {
@@ -330,14 +330,14 @@ DispatchDeviceControl(
             ntstatus = MhmEnableMouHidMonitor();
             if (!NT_SUCCESS(ntstatus))
             {
-                ERR_PRINT("MhmEnableMouHidMonitor failed: 0x%X\n", ntstatus);
+                ERR_PRINT("MhmEnableMouHidMonitor failed: 0x%X", ntstatus);
                 goto exit;
             }
 
             break;
 
         case IOCTL_DISABLE_MOUHID_INPUT_MONITOR:
-            DBG_PRINT("Processing IOCTL_DISABLE_MOUHID_INPUT_MONITOR.\n");
+            DBG_PRINT("Processing IOCTL_DISABLE_MOUHID_INPUT_MONITOR.");
 
             if (cbInput || cbOutput)
             {
@@ -348,7 +348,7 @@ DispatchDeviceControl(
             ntstatus = MhmDisableMouHidMonitor();
             if (!NT_SUCCESS(ntstatus))
             {
-                ERR_PRINT("MhmDisableMouHidMonitor failed: 0x%X\n", ntstatus);
+                ERR_PRINT("MhmDisableMouHidMonitor failed: 0x%X", ntstatus);
                 goto exit;
             }
 
@@ -357,7 +357,7 @@ DispatchDeviceControl(
         default:
             ERR_PRINT(
                 "Unhandled IOCTL."
-                " (MajorFunction = %hhu, MinorFunction = %hhu)\n",
+                " (MajorFunction = %hhu, MinorFunction = %hhu)",
                 pIrpStack->MajorFunction,
                 pIrpStack->MinorFunction);
             ntstatus = STATUS_UNSUCCESSFUL;

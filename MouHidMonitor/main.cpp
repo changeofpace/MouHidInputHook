@@ -81,19 +81,18 @@ QueryMouHidMonitorThread(
         //
         if (!DrvQueryMouHidInputMonitor(&fMouHidInputMonitorEnabled))
         {
-            ERR_PRINT("DrvQueryMouHidInputMonitor failed: %u\n",
-                GetLastError());
+            ERR_PRINT("DrvQueryMouHidInputMonitor failed: %u", GetLastError());
             continue;
         }
         //
         if (!fMouHidInputMonitorEnabled)
         {
             INF_PRINT(
-                "Detected mouse device changes. Enabling MouHid Monitor.\n");
+                "Detected mouse device changes. Enabling MouHid Monitor.");
 
             if (!DrvEnableMouHidInputMonitor())
             {
-                ERR_PRINT("DrvEnableMouHidInputMonitor failed: %u\n",
+                ERR_PRINT("DrvEnableMouHidInputMonitor failed: %u",
                     GetLastError());
                 continue;
             }
@@ -116,8 +115,8 @@ WaitForExitEvent(
     DWORD i = 0;
     BOOL status = TRUE;
 
-    INF_PRINT("MouHid Input Monitor enabled.\n");
-    INF_PRINT("Press ENTER to exit.\n");
+    INF_PRINT("MouHid Input Monitor enabled.");
+    INF_PRINT("Press ENTER to exit.");
 
     for (;;)
     {
@@ -128,7 +127,7 @@ WaitForExitEvent(
             &nEventsRead);
         if (!status)
         {
-            ERR_PRINT("ReadConsoleInputW failed: %u\n", GetLastError());
+            ERR_PRINT("ReadConsoleInputW failed: %u", GetLastError());
             goto exit;
         }
 
@@ -142,7 +141,7 @@ WaitForExitEvent(
             if (EXIT_PROCESS_VIRTUAL_KEY ==
                 InputEvents[i].Event.KeyEvent.wVirtualKeyCode)
             {
-                INF_PRINT("Exiting.\n");
+                INF_PRINT("Exiting.");
                 goto exit;
             }
         }
@@ -209,10 +208,17 @@ main(
     UNREFERENCED_PARAMETER(argc);
     UNREFERENCED_PARAMETER(argv);
 
+    if (!LogInitialization(LOG_CONFIG_STDOUT))
+    {
+        ERR_PRINT("LogInitialization failed: %u", GetLastError());
+        mainstatus = EXIT_FAILURE;
+        goto exit;
+    }
+
     hStdIn = GetStdHandle(STD_INPUT_HANDLE);
     if (INVALID_HANDLE_VALUE == hStdIn || !hStdIn)
     {
-        ERR_PRINT("GetStdHandle failed: %u\n", GetLastError());
+        ERR_PRINT("GetStdHandle failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -221,14 +227,14 @@ main(
 
     if (!SetConsoleCtrlHandler(CtrlSignalHandlerRoutine, TRUE))
     {
-        ERR_PRINT("SetConsoleCtrlHandler failed: %u\n", GetLastError());
+        ERR_PRINT("SetConsoleCtrlHandler failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
 
     if (!DrvInitialization())
     {
-        ERR_PRINT("DrvInitialization failed: %u\n", GetLastError());
+        ERR_PRINT("DrvInitialization failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -237,20 +243,20 @@ main(
 
     if (!DrvQueryMouHidInputMonitor(&fMouHidInputMonitorEnabled))
     {
-        ERR_PRINT("DrvQueryMouHidInputMonitor failed: %u\n", GetLastError());
+        ERR_PRINT("DrvQueryMouHidInputMonitor failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
     //
     if (fMouHidInputMonitorEnabled)
     {
-        WRN_PRINT("MouHid Monitor is already enabled.\n");
+        WRN_PRINT("MouHid Monitor is already enabled.");
         goto exit;
     }
 
     if (!GetConsoleMode(hStdIn, &PreviousMode))
     {
-        ERR_PRINT("GetConsoleMode failed: %u\n", GetLastError());
+        ERR_PRINT("GetConsoleMode failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -263,14 +269,14 @@ main(
     //
     if (!SetConsoleMode(hStdIn, CONSOLE_MODE_OPTIONS))
     {
-        ERR_PRINT("SetConsoleMode failed: %u\n", GetLastError());
+        ERR_PRINT("SetConsoleMode failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
 
     if (!DrvEnableMouHidInputMonitor())
     {
-        ERR_PRINT("DrvEnableMouHidInputMonitor failed: %u\n", GetLastError());
+        ERR_PRINT("DrvEnableMouHidInputMonitor failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -291,14 +297,14 @@ main(
         &ThreadId);
     if (!hThread)
     {
-        ERR_PRINT("CreateThread failed: %u\n", GetLastError());
+        ERR_PRINT("CreateThread failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
 
     if (!WaitForExitEvent(hStdIn))
     {
-        ERR_PRINT("WaitForExitEvent failed: %u\n", GetLastError());
+        ERR_PRINT("WaitForExitEvent failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -318,31 +324,31 @@ main(
             break;
 
         case WAIT_TIMEOUT:
-            ERR_PRINT("Timedout waiting for query thread to exit.\n");
+            ERR_PRINT("Timedout waiting for query thread to exit.");
             mainstatus = EXIT_FAILURE;
             goto exit;
 
         case WAIT_FAILED:
-            ERR_PRINT("WaitForSingleObject failed: %u\n", GetLastError());
+            ERR_PRINT("WaitForSingleObject failed: %u", GetLastError());
             mainstatus = EXIT_FAILURE;
             goto exit;
 
         default:
-            ERR_PRINT("Unexpected wait status: %u\n", waitstatus);
+            ERR_PRINT("Unexpected wait status: %u", waitstatus);
             mainstatus = EXIT_FAILURE;
             goto exit;
     }
 
     if (!GetExitCodeThread(hThread, &ThreadExitCode))
     {
-        ERR_PRINT("GetExitCodeThread failed: %u\n", GetLastError());
+        ERR_PRINT("GetExitCodeThread failed: %u", GetLastError());
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
     //
     if (ERROR_SUCCESS != ThreadExitCode)
     {
-        ERR_PRINT("Unexpected query thread exit code: %u\n", ThreadExitCode);
+        ERR_PRINT("Unexpected query thread exit code: %u", ThreadExitCode);
         mainstatus = EXIT_FAILURE;
         goto exit;
     }
@@ -365,7 +371,7 @@ exit:
 
     if (fDriverInitialized)
     {
-        VERIFY(DrvTermination());
+        DrvTermination();
     }
 
     return mainstatus;

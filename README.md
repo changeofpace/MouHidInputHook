@@ -209,6 +209,10 @@ The [MouHid](./MouHidInputHook/mouhid.cpp) module uses a heuristic to dynamicall
         2. The **ClassService** field points to an address contained in one of
             the executable image sections from (ii).
 
+## Log Output
+
+Use **DebugView** (or **DbgView**) from Sysinternals to read the driver's log output.
+
 ## Notes
 
 * The MouHidInputHook project was developed for Windows 7 SP1 x64. Support for other platforms is unknown.

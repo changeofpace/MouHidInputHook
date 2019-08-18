@@ -18,8 +18,7 @@ _Check_return_
 BOOL
 DrvInitialization();
 
-_Check_return_
-BOOL
+VOID
 DrvTermination();
 
 //=============================================================================
