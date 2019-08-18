@@ -72,7 +72,6 @@ exit:
 }
 
 
-_Use_decl_annotations_
 VOID
 DrvTermination()
 {
